@@ -1,0 +1,10 @@
+Django>=5.0
+djangorestframework>=3.14.0
+django-cors-headers>=4.3.0
+psycopg[binary]>=3.1.18
+dj-database-url>=2.1.0
+python-dotenv>=1.0.0
+dj-rest-auth==7.0.1
+django-allauth==65.4.1
+requests==2.32.3
+djangorestframework_simplejwt==5.5.0
