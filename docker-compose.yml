@@ -29,8 +29,8 @@ services:
   frontend:
     build: ./frontend
     volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
     ports:
       - "5173:5173"
     depends_on:
