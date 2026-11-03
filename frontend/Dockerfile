@@ -1,7 +1,7 @@
 # use an official Node.js image as the base
 FROM node:22-alpine AS build
 
-# set working directory inside the container
+# set working directory insiade the container
 WORKDIR /usr/src/app
 
 # copy package.json and package-lock.json
