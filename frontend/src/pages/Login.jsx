@@ -26,7 +26,7 @@ export default function Login() {
         setErrors({}); // clear old errors
 
         try {
-            // only username and password are sent; no email field
+            // only username and password are sent, no email field
             const response = await api.post('/auth/login/', form);
 
             localStorage.setItem('access', response.data.access);
