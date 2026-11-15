@@ -1,12 +1,13 @@
 from pathlib import Path
 
 import pypdf
-from docx import WordDocument
+from docx import Document as WordDocument
 from .Document import Document
 
 
 
-def load_files(files: list[str | Path]) -> list[str]:
+
+def load_files(files: list[str | Path]) -> list[Document]:
 
     search_root = Path(__file__).resolve().parents[2]
 
@@ -14,7 +15,15 @@ def load_files(files: list[str | Path]) -> list[str]:
 
     for file_path in files:
 
-        file_loc = search_root.rglob(file_path)
+        file_loc  = None
+
+        if isinstance(files, Path):
+
+            file_loc= files
+
+        else:
+
+            file_loc = search_root.rglob(str(file_path))
 
         for path in file_loc:
             
@@ -22,25 +31,30 @@ def load_files(files: list[str | Path]) -> list[str]:
 
                 text = extract_text(path)
 
-                if text.strip():
+                stripped_txt = text.strip()
+
+                if stripped_txt:
                 
-                    lines.append(text)
+                    lines.append(
+                        Document(text=stripped_txt, file_name=path.name, title=path.stem)
+                    )
     return lines
 
-def load(file_path) -> str:
+def load(file_path) -> Document:
+
     return load_files([file_path])[0]
         
 
 
 def extract_text(file_path_obj: Path):
 
-    file_suffix = file_path_obj.suffix().lower()
+    file_suffix = file_path_obj.suffix.lower()
 
     if file_suffix == ".pdf":
 
         pdf = pypdf.PdfReader(file_path_obj)
 
-        return "\n\n".join([page.get_text() for page in pdf]).strip()
+        return "\n\n".join(page.get_text().strip() for page in pdf if page.get_text().strip())
 
 
     elif file_suffix == ".docx":
