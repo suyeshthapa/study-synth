@@ -16,3 +16,4 @@ dist/
 
 # Local databases
 *.sqlite3
+backend/app/rag/chroma_data/
