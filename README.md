@@ -11,7 +11,7 @@ Study-Synth uses AI to create personalized lesson plans based on the student’s
 ### **Comprehensive Note Summaries**
 The platform can condense lengthy notes, lecture recordings, and reading material into concise, structured summaries. This helps students quickly review key concepts and retain important information more effectively.
 
-### ** Calendar **
+### Calendar 
 A built-in calendar helps students organize classes, assignments, revision deadlines, and planned study sessions in one place. It brings clarity to long-term academic planning and reduces missed commitments.
 
 ### ** Ratings Section **
