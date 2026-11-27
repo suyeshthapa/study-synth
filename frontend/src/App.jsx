@@ -3,6 +3,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import DeckPage from "./pages/DeckPage";
+import StudyPage from "./pages/StudyPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
@@ -24,6 +25,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <DeckPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/decks/:id/study"
+          element={
+            <ProtectedRoute>
+              <StudyPage />
             </ProtectedRoute>
           }
         />

@@ -227,6 +227,18 @@ export default function DeckPage() {
               )}
             </div>
             <div className="flex gap-2 shrink-0">
+              {cards.length > 0 ? (
+                <Link
+                  to={`/decks/${id}/study`}
+                  className="bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700"
+                >
+                  Study
+                </Link>
+              ) : (
+                <span className="bg-gray-200 text-gray-500 px-3 py-2 rounded-lg cursor-not-allowed">
+                  Study
+                </span>
+              )}
               <button
                 onClick={startEditDeck}
                 className="bg-gray-200 text-gray-800 px-3 py-2 rounded-lg hover:bg-gray-300"
