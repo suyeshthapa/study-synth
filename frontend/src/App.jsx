@@ -1,16 +1,17 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Register from './pages/Register';
-import Home from './pages/Home'
-import Login from './pages/Login'
-import ProtectedRoute from './components/ProtectedRoute';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Home from "./pages/Home";
+import DeckPage from "./pages/DeckPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
-function App() {
+export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route 
+        <Route path="/register" element={<Register />} />
+        <Route
           path="/"
           element={
             <ProtectedRoute>
@@ -18,9 +19,15 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/decks/:id"
+          element={
+            <ProtectedRoute>
+              <DeckPage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
 }
-
-export default App;
