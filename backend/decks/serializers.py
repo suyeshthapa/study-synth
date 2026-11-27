@@ -25,3 +25,7 @@ class CardSerializer(serializers.ModelSerializer):
         if deck.owner != self.context["request"].user:
             raise serializers.ValidationError("You don't own this deck to make changes to it.")
         return deck
+
+class GenerateRequestSerializer(serializers.Serializer):
+    prompt = serializers.CharField(max_length=500)
+    count = serializers.IntegerField(min_value=1, max_value=20, default=10)

@@ -159,6 +159,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
+    'DEFAULT_THROTTLE_RATES': {
+        'ai_generate': '10/hour',
+    },
 }
 
 REST_AUTH = {
