@@ -79,6 +79,10 @@ class RAGPipelineTests(unittest.TestCase):
     @patch("app.rag.rag_pipeline.Model")
     @patch("app.rag.rag_pipeline.Embedder")
     @patch("app.rag.rag_pipeline.VectorDB")
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> c28f6f5 (Fixed gitignore)
     def test_generate_response_reuses_supplied_model_instance(
         self, vector_db, embedder, model_class
     ):
@@ -104,6 +108,11 @@ class RAGPipelineTests(unittest.TestCase):
     @patch("app.rag.rag_pipeline.Model")
     @patch("app.rag.rag_pipeline.Embedder")
     @patch("app.rag.rag_pipeline.VectorDB")
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 7df2c16 (Finished RAG pipeline)
+>>>>>>> c28f6f5 (Fixed gitignore)
     def test_generate_response_rejects_unknown_response_type(
         self, vector_db, embedder, model_class
     ):
