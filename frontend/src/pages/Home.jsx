@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/apiClient";
 
-const inputClass = "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500";
+const inputClass =
+  "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500";
 
 export default function Home() {
   const [decks, setDecks] = useState([]);
@@ -10,22 +11,42 @@ export default function Home() {
   const [loadError, setLoadError] = useState("");
   const [form, setForm] = useState({ title: "", description: "" });
   const [errors, setErrors] = useState({});
+  const [search, setSearch] = useState("");               // what's typed in the box
+  const [debouncedSearch, setDebouncedSearch] = useState(""); // what we actually search for
+  const [reloadKey, setReloadKey] = useState(0);          // bump this to force a reload
   const navigate = useNavigate();
 
-  // fetch the logged-in user's decks only once when the page loads (empty dependecy array)
+  // wait 300ms after the user stops typing before searching
   useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search.trim()), 300);
+    return () => clearTimeout(timer); // typing again cancels the previous timer
+  }, [search]);
+
+  // fetch decks on first load, and again whenever the search or reloadKey changes
+  useEffect(() => {
+    let ignore = false; // protects against slow, out-of-order responses
+
     const loadDecks = async () => {
       try {
-        const res = await api.get("/decks/");
-        setDecks(res.data);
+        const res = await api.get("/decks/", {
+          params: debouncedSearch ? { search: debouncedSearch } : {},
+        });
+        if (!ignore) {
+          setDecks(res.data);
+          setLoadError("");
+        }
       } catch (err) {
-        setLoadError("Couldn't load your decks. Please try again.");
+        if (!ignore) setLoadError("Couldn't load your decks. Please try again.");
       } finally {
-        setLoading(false);
+        if (!ignore) setLoading(false);
       }
     };
     loadDecks();
-  }, []);
+
+    return () => {
+      ignore = true;
+    };
+  }, [debouncedSearch, reloadKey]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -35,9 +56,12 @@ export default function Home() {
     e.preventDefault();
     setErrors({});
     try {
-      const res = await api.post("/decks/", form);
-      setDecks([res.data, ...decks]); // newest deck goes first
+      await api.post("/decks/", form);
       setForm({ title: "", description: "" });
+      // clear the search and reload, so the new deck is visible
+      setSearch("");
+      setDebouncedSearch("");
+      setReloadKey((k) => k + 1);
     } catch (err) {
       setErrors(err.response?.data || { detail: "Something went wrong." });
     }
@@ -106,12 +130,25 @@ export default function Home() {
           </button>
         </form>
 
+        {/* search */}
+        <input
+          type="search"
+          placeholder="Search decks by title or description"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className={`${inputClass} mb-6`}
+        />
+
         {/* deck grid */}
         {loading && <p className="text-gray-600">Loading...</p>}
         {loadError && <p className="text-red-600">{loadError}</p>}
 
         {!loading && !loadError && decks.length === 0 && (
-          <p className="text-gray-600">No decks yet. Create your first one above!</p>
+          <p className="text-gray-600">
+            {debouncedSearch
+              ? `No decks match "${debouncedSearch}".`
+              : "No decks yet. Create your first one above!"}
+          </p>
         )}
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

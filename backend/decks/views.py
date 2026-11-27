@@ -1,4 +1,4 @@
-from rest_framework import viewsets 
+from rest_framework import viewsets, filters
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Deck, Card
@@ -7,6 +7,8 @@ from .serializers import DeckSerializer, CardSerializer
 class DeckViewSet(viewsets.ModelViewSet): # provides automatic CRUD operations for decks
     serializer_class = DeckSerializer # use deck serializer to convert deck objects to json and vice versa
     permission_classes = [IsAuthenticated]
+    filter_backends = [filters.SearchFilter]   
+    search_fields = ['title']  
 
     def get_queryset(self): # controls which database records a user can access, in this case only decks that belong to the current user
         return Deck.objects.filter(owner=self.request.user)

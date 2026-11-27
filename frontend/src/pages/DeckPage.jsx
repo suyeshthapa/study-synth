@@ -20,7 +20,7 @@ export default function DeckPage() {
   const [errors, setErrors] = useState({});
 
   // edit deck from
-  const [editingDeck, setEditingDeck] = useState(false);
+  const [editingDeck, setEditingDeck] = useState(false); // are we displaying the edit deck form or the normal view?
   const [deckForm, setDeckForm] = useState({ title: "", description: "" });
   const [deckErrors, setDeckErrors] = useState({});
 
