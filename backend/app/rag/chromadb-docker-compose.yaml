@@ -1,0 +1,23 @@
+services:
+
+  backend:
+    build: .
+    container_name: rag_backend
+    ports:
+      - "8001:8001"
+    depends_on:
+      - chromadb
+    environment:
+      CHROMA_HOST: chromadb
+      CHROMA_PORT: 8000
+
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: rag_chroma
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma_data:/data
+
+volumes:
+  chroma_data:

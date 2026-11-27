@@ -1,0 +1,117 @@
+
+
+
+Failure Analysis in Computer Science
+
+University of Florida
+
+
+
+
+
+
+
+
+Table of Contents
+Introduction	2
+1.	Failure in Computer Science	3
+1.1 Types of Failure	3
+1.2 Causes of Failure	3
+1.2.1 Technical Sources	3
+1.2.2 Nontechnical sources	3
+1.3 Types of Failure Analysis	4
+1.3.1 Preventative – SFMEA	4
+1.3.2 Forensic – Debugging	5
+1.3.3 Forensic – SFMEA	5
+2.	Case Study	6
+2.1 Case Description	6
+2.2 Case Investigation	7
+2.3 Recommendations	8
+2.3.1 SpECS	8
+2.3.2 Verification and Validation	8
+2.3.3 - Debugging	9
+2.3.4 - Bias	9
+References	9
+
+
+Introduction
+Computer science and software development seeks to integrate software with consumer or industry services such as transportation, banking, and social media. The development and maintenance of these technologies is often a detailed, intertwined process with great potential for error, if careful consideration is not used. This error can take form through various types of software failure. Failure can be anything from an application crashing for a few seconds with minimal impact, or a nuclear missile system misfiring, endangering millions. These failures can have many causes, some as small as an incorrect line of code or some as large as a poor planning process. Failure analysis in this field works to evaluate these causes and discover where mistakes were made, and how to avoid them in the future. 
+1.	Failure in Computer Science
+1.1 Types of Failure
+Many failure modes in computer science are harmless or only inconvenient at worst. These modes would be those such as a simple program crashing, known as a system failure, or a program providing unexpected output [1]. However, a failure mode in computer science can become serious when it results in something like a plane crash or millions of dollars being misplaced or stolen. In the case of a software failure such as a program crash, there are many smaller types of failure that may cause the incident. Many can be classified as output errors or execution errors, with thousands of smaller errors classified underneath these as well [2]. Examples of these subclass errors are incorrect output, incorrect output type, and incorrect output timing, to name only a few [2]. 
+
+1.2 Causes of Failure
+1.2.1 Technical Sources
+
+There are many potential sources of error when creating software. The list is endless but most of these are essentially different ways a program can go wrong. For instance, one cause is known as an infinite loop. This is when a program’s logic is not designed properly, and therefore it does not terminate as it should [2]. Another source of failure is called a memory leak, which is when dynamically allocated memory is not freed or deleted within a program [2].
+
+1.2.2 Nontechnical sources
+
+While technical in nature, failures often stem from nontechnical sources. One of the leading sources of failure stems from the project development process. Software development is a complex process and there are many sources of error that can occur, but most can be encapsulated by a poor or incomplete planning process. This is usually caused by failing to see the extensive requirements a project may need in its future and failing to adapt as new necessities are shown [3]. Therefore, this can be identified as a systems-based error. These types of errors are often the culprit, as computers do exactly as they are programmed to. Therefore, errors mostly originate from development process, at the hands of humans.
+
+1.3 Types of Failure Analysis
+
+1.3.1 Preventative – SFMEA
+Failure analysis is critical at all point of a software’s lifespan, but it is especially important in its development phase, so that potential mistakes can be foreseen. A widely used framework in this process is called software failure modes and effects analysis (SFMEA) [2]. This is a nondestructive process that applies a software perspective to the Failure Modes and Effects Analysis (FMEA) which originates in MIL-STD-1629A [4][5]. The process begins by creating a baseline evaluation to determine potential hazards that may occur. Then, documentation into the individual components of the project is necessary to determine the structure the project will follow [2]. This SFMEA process requires thorough planning and establishing project markers, much like that of the Verification and Validation method of the IEEE 1059 standard [7]. This effectively limits room for mistakes that originate from major causes of failure such as poor planning. Many related processes have emerged, all with similar targets that require a careful analysis of all parts, intentions, and potential outcomes of a software. Another of these, for example, is known as System Engineering for Computing Systems (SpECS) [6]. 
+
+1.3.2 Forensic – Debugging
+If software errors persist beyond planning phases such as SFMEA, other approaches are necessary to ensure mistakes can be located and resolved. One approach is known as debugging. Debugging requires a reflection on the approaches taken and an evaluation of relevant variables and components of the project in question. From this, relevant test cases must be identified to test where exactly the failure mechanism occurred [1]. This process adheres to section 4.2.2 in the IEEE 1059 standard by creating a detailed evaluation of what went wrong [7]. 
+
+1.3.3 Forensic – SFMEA
+
+The previously mentioned SFMEA process may also be used in a diagnostic manner. After a failure mode occurs, SFMEA can be used to generate a thorough analysis on the mistake and create a solution. The process involves a flow in which the highest preference is to remove the mistake outright. The next preference would be to reduce the rate at which the failure occurs, and lastly the least preferred option is to reduce the effects the failure produces [2]. 
+2.	Case Study
+2.1 Case Description
+Ariane 5 Flight 501 was an unmanned rocket created by the European Space Agency with a mission to launch research satellites into orbit. The project took 10 years and 7 billion dollars to execute. The rocket launched on June 4th, 1996 and exploded 40 seconds later. This resulted in a massive loss of time and resources, alongside a major hit to the reputation of Europe’s Space Agency. What initially appeared to be a mystery, was revealed to be caused by a software failure. The cause of the crash was identified to be an error in the shuttle’s onboard computing system. The fatal mistake occurred as the system attempted to fit a 64-bit integer into a 16-bit space, leading to an integer overflow error. This simple software bug caused the Inertial Reference System (SRI) to crash, leading to the explosion. Figure 2 highlights the control flow of this process -- where the error should have been caught [9].
+
+Figure 1 - a timeline of the On-Board Computer system (OBC) failure [6].
+
+
+Figure 2 - A flowchart demonstrating the rocket’s flow of information. Used in the Ariane 5’s initial testing process [9].
+
+
+2.2 Case Investigation
+
+While the explosion was caused by a small software bug, the root cause is not as straightforward. While it is true that a program error led to the crash, the system should have been designed so that this error did not have an effect to the level that it did. As it can be seen in figure 1, the shuttle lost the initial SRI as well as the backup SRI [6]. Additionally, due to incomplete planning procedures, it was not highlighted that the rocket did not need the culprit software running at that point in the flight [6]. Upon post-crash evaluation, using a SpECS approach highlights the previously mentioned flaws in the shuttle and its software. 
+
+In addition, the system’s design should have been prepped to handle failures that mathematically can be shown likely, as was the case in the Ariane 5. Within a SpECS framework, the potential error would have been spotted and accounted for before it could occur – which it did in this case [1]. Post-crash analysis also found troubles with using software from its predecessor, the Ariane 4. The requirements and parameters for this older software were not specified in the Ariane 5’s design process. Had this been done, it would have been shown that by design, the Ariane 5 had a different takeoff pattern that would have created numbers much different then Ariane 4, therefore making it incompatible with the reused software [6]. 
+
+2.3 Recommendations
+
+2.3.1 SpECS
+
+It has been demonstrated that the Ariane 5 flight 501 crash was due to mistakes along the projects planning cycle. As it was stated, the software in the computing system that caused the crash was not needed at that point in the flight. Had this distinction been made through a Systems Engineering method such as SpECS or similar to Verification and Validation shown in IEEE 1059, the crisis would have been avoided [6][7]. These system-based methods consider and examine every component of the software, diagramming it with how it is used, when it is used, and what effect it has [7]. 
+
+2.3.2 Verification and Validation
+
+ An additional recommendation follows from IEEE standard 1059. In future projects, the Verification and Validation process should be used in the design phase. In this standard, section 4.2.3 Interface Analysis, following this framework would have led to asking the question about the software “are all restrictions and constraints clearly defined?” [7]. Simple reflection on this topic would have highlighted the lack of need for the problematic aspect of the software. This shows how a such a standard is essential for future projects.
+
+2.3.3 - Debugging
+
+With the Ariane 5, in the testing phase they should have inputted every type of potential input into the software. Properly done, this should have shown the problem with certain potential data input. When a failure occurred, a debugging process should have occurred to trace and resolve the issue [6]. Clearly, it can be seen such a process should be followed in future projects.
+
+2.3.4 - Bias
+
+A final recommendation is derived directly from the Inquiry Board that was designated to evaluate the crash. The Board determined that an incorrect approach was taken by assuming the software to be correct by default. This led to the error not being handled properly [8]. As a recommendation for future projects, it should be assumed that mistakes will occur, therefore safeguards must be put into place to prevent these. 
+
+
+ References
+[1] 	R. A. DeMillo, H. Pan and E. H. Spafford, "Failure and fault analysis for software debugging," in Proceedings Twenty-First Annual International Computer Software and Applications Conference (COMPSAC'97), 1997, pp. 515-521.
+
+[2] 	J. J. Stadler and N. J. Seidl, "Software failure modes and effects analysis," in 2013 Proceedings Annual Reliability and Maintainability Symposium (RAMS), pp. 1-5.
+
+[3] 	S. Dalal and R.S. Chhillar, “Case Studies of Most Common and Severe Types of Software System Failure,” International Journal of Advanced Research in Computer Science and Software Engineering, vol. 2, no. 8, Aug., pp. 341-347. 2012.
+
+[4] 	Dong Nguyen, "Failure modes and effects analysis for software reliability," Annual Reliability and Maintainability Symposium. 2001 Proceedings. International Symposium on Product Quality and Integrity (Cat. No.01CH37179), Philadelphia, PA, pp. 219-222.
+
+[5] Procedures for performing a failure mode, effects and criticality analysis, MIL-STD-1629A, 1980.
+
+[6] 	G. Le Lann, "An analysis of the Ariane 5 flight 501 failure-a system engineering perspective," Proceedings International Conference and Workshop on Engineering of Computer-Based Systems, Monterey, CA, USA, 1997, pp. 339-346.
+
+[7] 	IEEE Guide for Software Verification and Validation Plans, IEEE Std 1059-1993, 1993. 
+
+[8] 	J.L. Lions, “Ariane 5 flight 501 failure,” Ariane 5 Inquiry Board, Paris, France, …., 19 July 1996.
+
+[9] 	C. Poivey et al., "Proton SEU test of MC68020, MC68882, TMS320C25 on the ARIANE 5 launcher on board computer (OBC) and inertial reference system (SRI)," in Proceedings of the Third European Conference on Radiation and its Effects on Components and Systems, Arcachon, France, 1995, pp. 289-295.
+
+
