@@ -29,10 +29,10 @@ PROMPT_INSTRUCTION = {
         "GeneratedNotes schema exactly."
     ),
     GenericResponse: (
-        "Answer the user's question or explain the requested topic using only "
-        "information supported by the supplied context. Be clear and concise. "
-        "Do not invent missing information; say when the context does not provide "
-        "an answer. Return a response matching the GenericResponse schema."
+        "Answer the user's question or explain the requested topic."
+        "Be as factual and accurate as possible without relying on external context."
+        "Please do not state that there is no external context to provide. Instead answer the users prompt"
+        "to the best of your ability."
     ),
 }
 
@@ -43,7 +43,6 @@ load_dotenv(ENV_PATH / "api_key.env")
 
 class Model:
     def __init__(self, mode: str, model: str, **kwargs):
-    
 
         self.mode = mode
         temperature = kwargs.pop("temperature", 0.2)
@@ -62,6 +61,22 @@ class Model:
             )
 
     def chat(self, prompt: str, context: str | None, schema_type: BaseModel) -> BaseModel:
+
+        user_dict = {}
+
+        user_dict["role"] = "user"
+
+        if context:
+
+            user_dict["content"] = (
+                f"TASK:\n{prompt}\n\n"
+                f"Context: {context}"
+            )
+
+        else:
+
+            user_dict["content"] = f"TASK:\n{prompt}\n\n"
+
       
         messages = [
             {
@@ -75,20 +90,27 @@ class Model:
                     f"{PROMPT_INSTRUCTION[schema_type]}"
                 ),
             },
-            {
-                "role": "user",
-                "content": (
-                    f"TASK:\n{prompt}\n\n"
-                    f"Context: {context if context is not None else 'No context provided.'}"
-                ),
-            },
+           user_dict,
         ]
 
-        if self.mode in ("google-groq", "google-genai"):
-            
-            structured_llm = self.llm.with_structured_output(schema=schema_type)
+        print("Schema_type is \t", schema_type)
+
+        if self.mode == "google-groq":
+            structured_llm = self.llm.with_structured_output(
+            schema=schema_type,
+            method="json_schema",
+            strict=True
+            )
 
             return structured_llm.invoke(messages)
+
+        elif self.mode == "google-genai":
+            structured_llm  = self.llm.with_structured_output(
+                schema=schema_type
+            )
+
+            return structured_llm.invoke(messages)
+
 
         response = ollama.chat(
             model=self.llm,

@@ -1,4 +1,3 @@
-
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -8,7 +7,8 @@ from ..schema import *
 from .Chunk import Chunk, chunk_text
 from .Embedder import Embedder
 from .Loader import load
-from .VectorDB import VectorDB
+from .VectorDB import VectorDB, sim_scores
+from ..model.file_agent import loop_through_dir
 
 @dataclass
 class StoredChunk:
@@ -52,7 +52,21 @@ class RAGPipeline:
 
     def context(self, file_path: str, user_id: int) -> str:
 
+
+
         doc = load(file_path)
+
+        collection = self.database.get_or_create_db_for_user(user_id)
+
+        existing = collection.get(
+            where = {"document_id": doc.doc_id},
+            include = [],            
+            limit = 1
+        )
+
+        if (existing["ids"]):
+
+            return doc.doc_id
 
         chunks = chunk_text(
             doc, self.chunk_size, self.chunk_overlap, mode=self.chunking_mode
@@ -73,7 +87,18 @@ class RAGPipeline:
 
         return top_k_embeddings
 
-    def generate_response(
+    def _response_impl(self,context: list[str], model: str|Model, prompt: str , schema_type: BaseModel):
+
+        model_instance = (
+                    Model(mode=self.model_mode, model=model)
+                    if isinstance(model, str)
+                    else model
+                )
+        
+        return model_instance.chat(prompt, context, schema_type)
+
+
+    def generate_response_impl_at_doc_id(
         self,
         prompt: str,
         model: str | Model,
@@ -91,14 +116,46 @@ class RAGPipeline:
 
             context = "\n\n".join(chunk.text for chunk in retrieved_chunks)
 
+        return self._response_impl(context, model, prompt, schema_type)
 
-        model_instance = (
-            Model(mode=self.model_mode, model=model)
-            if isinstance(model, str)
-            else model
-        )
+        
 
-        return model_instance.chat(prompt, context, schema_type)
+    def generate_response(
+        self,
+        model: str,
+        dir: str,
+        user_id: str, 
+        prompt: str
+    ):
+
+        chunks: list[sim_scores] = []
+
+        context = None
+
+        schema_type = TaskRouter().classify_and_rewrite_query(prompt)
+
+
+        if (requires_context(schema_type)):
+
+            for file in loop_through_dir(dir):
+
+
+                doc_id = self.context(file, user_id)
+
+                embeddings = self.provide_context(prompt, user_id, doc_id)
+
+                #print(embeddings)
+
+                chunks.extend(embeddings)
+
+            top_k_chunk: list[sim_scores] = sorted(chunks, key = lambda x: x.score )[:self.top_k]
+
+            context = "\n\n".join(chunk.text for chunk in top_k_chunk)
+
+
+        return self._response_impl(context,model, prompt, schema_type)
+
+        
 
 
 def main():
@@ -109,25 +166,41 @@ def main():
         top_k=8,
         model_mode="google-genai",
     )
-    model = Model(mode="google-genai", model="gemini-3.8-flash")
+    #mode = ('google-groq'), model = 'openai/gpt-oss-120b'
+    #, temperature = 0.2, max_output_tokens = 10000, thinking_level = "low"
+    model = Model(mode="google-groq", model="openai/gpt-oss-120b" )
     document = documents / "colosseum.txt"
     user_id = 1
     prompts = [
         "Create three flashcards about the Colosseum's construction and history.",
         "Create three flashcards about the Colosseum's architecture and seating.",
         "Create three flashcards about events held at the Colosseum.",
+        "How is the weather today",
+        "Who is the Us president",
+        "Was mike tyson a bigger star than michael jordan and why."
     ]
 
     document_id = pipeline.context(str(document), user_id=user_id)
     for prompt in prompts:
         print(f"\nPrompt: {prompt}")
-        result = pipeline.generate_response(
+        result = pipeline.generate_response_impl_at_doc_id(
             prompt=prompt,
             model=model,
             user_id=user_id,
             document_id=document_id
         )
-        print(result.model_dump_json(indent=2))
+        print(result.model_dump_json(indent=2), "\n\n")
+
+        print("OTHER FILE OUTPUT \n\n")
+
+        result_other = pipeline.generate_response(
+            model = model,
+            dir = documents,
+            user_id = user_id,
+            prompt = prompt
+        )
+
+        print(result_other.model_dump_json(indent = 4), "\n\n")
 
 
 if __name__ == "__main__":

@@ -28,14 +28,14 @@ class GeneratedNotes(BaseModel):
 
 class GenericResponse(BaseModel):
 
-    txt: str = Field(max_length = 1000)
+    txt: str = Field(max_length = 3000)
 
 
 class Flashcard(BaseModel):
     model_config = ConfigDict(strict=True, extra='forbid')
     question: str = Field(..., max_length=200)
     answer: str = Field(..., max_length=200)
-    source_excerpt: str | None = Field(default=None, max_length=100)
+    source_excerpt: str | None = Field(default=None, max_length=300)
 
     @model_validator(mode="after")
     def limit_total_length(self):

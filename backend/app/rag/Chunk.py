@@ -1,6 +1,6 @@
 
 from dataclasses import dataclass, asdict
-from .Document import Document
+from .Document import *
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 
@@ -10,6 +10,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 class Chunk:
     text: str
     index: int
+    chunk_hash: int
     document_offset: tuple[int, int]
     document_metadata: dict[str, str]
 
@@ -42,6 +43,7 @@ def chunk_text(
             Chunk(
                 text=text_chunk,
                 index=idx,
+                chunk_hash = generate_hash(text_chunk),
                 document_offset=(i, min(i + chunk_size, len(text))),
                 document_metadata = doc_metadata
             )
@@ -73,6 +75,7 @@ def chunk_text(
             Chunk(
                     text=chunk,
                     index=ch_idx,
+                    chunk_hash = generate_hash(chunk),
                     document_offset=(start,end),
                     document_metadata = doc_metadata
                 ))

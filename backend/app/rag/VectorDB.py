@@ -117,6 +117,7 @@ class VectorDB:
         metadatas = [
 
             {
+                "chunk_hash": c.chunk_hash,
                 "chunk_index": c.index,
                 "begin_offset": c.document_offset[0],
                 "end_offset": c.document_offset[1],
@@ -144,6 +145,8 @@ class VectorDB:
         sim_lst = []
 
         for doc, dist, metadata in zip(query_info["documents"][0], query_info["distances"][0], query_info["metadatas"][0]):
+
+            metadata.pop("chunk_hash")
 
             sim_lst.append( sim_scores(doc, score = float(dist), **metadata) )
 
