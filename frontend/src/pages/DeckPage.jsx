@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import api from "../api/apiClient";
+import GenerateCards from "../components/GenerateCards";
 
 const inputClass = "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500";
 const errorClass = "text-sm text-red-600";
@@ -254,6 +255,11 @@ export default function DeckPage() {
             </div>
           </div>
         )}
+
+        <GenerateCards
+          deckId={id}
+          onSaved={(newCards) => setCards((prev) => [...prev, ...newCards])}
+        />
 
         {/* add card form */}
         <form
