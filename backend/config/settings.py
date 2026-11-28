@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'dj_rest_auth',
     'dj_rest_auth.registration',
     'corsheaders',
+    'decks',
 ]
 
 MIDDLEWARE = [
@@ -158,6 +159,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
+    'DEFAULT_THROTTLE_RATES': {
+        'ai_generate': '10/hour',
+    },
 }
 
 REST_AUTH = {

@@ -24,6 +24,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - DEBUG=True
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
     networks:
       - webapp_network
   frontend:
